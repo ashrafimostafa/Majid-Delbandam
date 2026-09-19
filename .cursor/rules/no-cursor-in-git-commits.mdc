@@ -1,0 +1,31 @@
+---
+description: Never put Cursor attribution in git commit messages or metadata
+alwaysApply: true
+---
+
+# No Cursor text in git commits
+
+Never add Cursor, Cursor Agent, Cursor Cowork, or any AI/tool attribution to git.
+
+## Commit messages
+
+- Write only a normal subject/body.
+- Do not mention Cursor, Copilot, or that an agent wrote the code.
+- Do not use `git commit --trailer`.
+- Do not add any of these:
+  - `Co-authored-by: Cursor`
+  - `Co-authored-by: ... cursoragent@cursor.com`
+  - `Made-with: Cursor`
+  - `Made with Cursor`
+
+## If a trailer is injected anyway
+
+Strip it before finishing. Amend only when that commit is still local, created in this session, and not pushed. Otherwise make a new clean commit with no trailer.
+
+```
+# ❌ BAD
+git commit -m "Add empty app." --trailer "Co-authored-by: Cursor"
+
+# ✅ GOOD
+git commit -m "Add empty app."
+```
