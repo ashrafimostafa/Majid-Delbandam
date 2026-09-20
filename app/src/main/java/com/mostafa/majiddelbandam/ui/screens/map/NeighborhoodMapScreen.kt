@@ -1,5 +1,6 @@
 package com.mostafa.majiddelbandam.ui.screens.map
 
+import android.os.Build
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -32,24 +33,23 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.VolumeOff
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.MusicOff
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.outlined.Cottage
 import androidx.compose.material.icons.outlined.PlayCircle
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -61,6 +61,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -109,6 +110,7 @@ private val BannerFill = Color(0xFFF5EBD7)
 private val SurfaceHigh = Color(0xFFFFE3CC)
 private val LockClay = Color(0xFFECE0C8)
 private val TealShelf = Color(0xFF0C4A45)
+private val HeaderInk = Color(0xFF3A5346)
 
 @Composable
 fun NeighborhoodMapScreen(
@@ -160,7 +162,6 @@ fun NeighborhoodMapScreen(
         ) {
             MapToolbar(
                 progress = progress,
-                neighborhood = hood.title,
                 wheelFree = wheelFree,
                 onAddCoins = onShop,
                 onShop = onShop,
@@ -265,7 +266,6 @@ private fun CourtyardAmbience() {
 @Composable
 private fun MapToolbar(
     progress: PlayerProgress,
-    neighborhood: String,
     wheelFree: Boolean,
     onAddCoins: () -> Unit,
     onShop: () -> Unit,
@@ -277,26 +277,16 @@ private fun MapToolbar(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            AshrafiCapsule(progress.ashrafi, onAddCoins)
-            TitleBadge(
-                neighborhood = neighborhood,
-                modifier = Modifier.weight(1f)
-            )
-            RoundIcon(Icons.Filled.Settings, stringResource(R.string.settings), onSettings)
-            RoundIcon(
-                if (progress.soundEnabled) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
-                stringResource(R.string.sound),
-                onSound
-            )
-        }
+        GlassHeader(
+            ashrafi = progress.ashrafi,
+            soundOn = progress.soundEnabled,
+            onAddCoins = onAddCoins,
+            onSettings = onSettings,
+            onSound = onSound
+        )
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -351,75 +341,170 @@ private fun MapToolbar(
 }
 
 @Composable
-private fun AshrafiCapsule(amount: Int, onAdd: () -> Unit) {
-    Row(
+private fun GlassHeader(
+    ashrafi: Int,
+    soundOn: Boolean,
+    onAddCoins: () -> Unit,
+    onSettings: () -> Unit,
+    onSound: () -> Unit
+) {
+    val shape = RoundedCornerShape(28.dp)
+    val frost = if (Build.VERSION.SDK_INT >= 31) Modifier.blur(10.dp) else Modifier
+    Box(
         modifier = Modifier
-            .clip(CircleShape)
-            .background(Parchment.copy(alpha = 0.95f))
-            .border(1.dp, Adobe.copy(alpha = 0.3f), CircleShape)
-            .padding(start = 4.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+            .fillMaxWidth()
+            .shadow(
+                elevation = 16.dp,
+                shape = shape,
+                ambientColor = Color(0x33000000),
+                spotColor = Color(0x14000000)
+            )
+            .clip(shape)
     ) {
         Box(
             Modifier
-                .size(22.dp)
+                .matchParentSize()
+                .then(frost)
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.55f),
+                            Color(0xFFFFF4EA).copy(alpha = 0.28f),
+                            Color(0xFFFFE3CC).copy(alpha = 0.16f),
+                            Color.White.copy(alpha = 0.42f)
+                        )
+                    )
+                )
+        )
+        Box(
+            Modifier
+                .matchParentSize()
+                .background(
+                    Brush.verticalGradient(
+                        0f to Color.White.copy(alpha = 0.38f),
+                        0.45f to Color.Transparent,
+                        1f to Color(0xFFC4A574).copy(alpha = 0.10f)
+                    )
+                )
+                .border(
+                    1.dp,
+                    Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.78f),
+                            Color.White.copy(alpha = 0.18f),
+                            Color.White.copy(alpha = 0.50f)
+                        )
+                    ),
+                    shape
+                )
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            GlassCoinChip(amount = ashrafi, onAdd = onAddCoins)
+            Text(
+                text = stringResource(R.string.app_name),
+                modifier = Modifier.weight(1f),
+                color = HeaderInk,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
+            HeaderIcon(
+                icon = if (soundOn) Icons.Filled.MusicNote else Icons.Filled.MusicOff,
+                label = stringResource(R.string.sound),
+                onClick = onSound
+            )
+            HeaderIcon(
+                icon = Icons.Outlined.Settings,
+                label = stringResource(R.string.settings),
+                onClick = onSettings
+            )
+        }
+    }
+}
+
+@Composable
+private fun GlassCoinChip(amount: Int, onAdd: () -> Unit) {
+    val shape = RoundedCornerShape(22.dp)
+    Row(
+        modifier = Modifier
+            .clip(shape)
+            .background(
+                Brush.horizontalGradient(
+                    listOf(
+                        Color.White.copy(alpha = 0.48f),
+                        Color(0xFFFFF8F2).copy(alpha = 0.22f),
+                        Color.White.copy(alpha = 0.36f)
+                    )
+                )
+            )
+            .border(1.dp, Color.White.copy(alpha = 0.55f), shape)
+            .padding(start = 10.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Box(
+            Modifier
+                .size(18.dp)
                 .clip(CircleShape)
-                .background(Ashrafi)
+                .background(Brush.radialGradient(listOf(Color(0xFFFBBF24), Color(0xFFD97706)))),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                Icons.Filled.MonetizationOn,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(12.dp)
+            )
+        }
+        Text(
+            PersianLetters.toPersianGrouped(amount),
+            color = HeaderInk,
+            fontWeight = FontWeight.ExtraBold,
+            fontSize = 16.sp
+        )
+        Text(
+            stringResource(R.string.ashrafi),
+            color = Color(0xFF6B635C),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Box(
+            Modifier
+                .size(26.dp)
+                .clip(CircleShape)
+                .background(
+                    Brush.radialGradient(listOf(Color(0xFF2DD4BF), Color(0xFF0F766E)))
+                )
                 .clickable(onClick = LocalGameAudio.current.wrap(onAdd)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Add, stringResource(R.string.add_coins), tint = Color.White, modifier = Modifier.size(14.dp))
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                PersianLetters.toPersianGrouped(amount),
-                color = Color(0xFF78350F),
-                fontWeight = FontWeight.Black,
-                fontSize = 13.sp,
-                lineHeight = 16.sp
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = stringResource(R.string.add_coins),
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
             )
         }
-        Text(stringResource(R.string.ashrafi), color = Color(0xFF92400E), fontSize = 10.sp, fontWeight = FontWeight.Bold)
-        Icon(Icons.Filled.MonetizationOn, null, tint = AshrafiDeep, modifier = Modifier.size(18.dp))
     }
 }
 
 @Composable
-private fun TitleBadge(neighborhood: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(Brush.verticalGradient(listOf(BannerFill, SurfaceHigh)))
-            .border(2.dp, AshrafiDeep.copy(alpha = 0.5f), RoundedCornerShape(16.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            "✨  ${stringResource(R.string.app_name)}  ✨",
-            color = OnSurface,
-            fontWeight = FontWeight.Black,
-            fontSize = 13.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 1
-        )
-        Text(neighborhood, color = Color(0xFF78350F), fontSize = 9.sp, fontWeight = FontWeight.SemiBold)
-    }
-}
-
-@Composable
-private fun RoundIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
+private fun HeaderIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
     Box(
         Modifier
             .size(36.dp)
-            .shadow(4.dp, CircleShape)
             .clip(CircleShape)
-            .background(Parchment.copy(alpha = 0.95f))
-            .border(1.dp, Adobe.copy(alpha = 0.3f), CircleShape)
             .clickable(onClick = LocalGameAudio.current.wrap(onClick)),
         contentAlignment = Alignment.Center
     ) {
-        Icon(icon, label, tint = OnSurface, modifier = Modifier.size(18.dp))
+        Icon(icon, label, tint = HeaderInk, modifier = Modifier.size(22.dp))
     }
 }
 
