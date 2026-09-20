@@ -92,8 +92,6 @@ import com.mostafa.majiddelbandam.ui.theme.Turquoise
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.random.Random
 import java.util.Calendar
 
@@ -402,13 +400,10 @@ private fun ShamsehWheel(rotationDegrees: Float) {
                         size = Size(size.width, size.height),
                         style = Stroke(width = 3.dp.toPx())
                     )
-                    val mid = Math.toRadians((start + sweep / 2.0))
-                    val labelR = size.minDimension * 0.32f
-                    val lx = center.x + labelR * cos(mid).toFloat()
-                    val ly = center.y + labelR * sin(mid).toFloat()
+                    val midDeg = start + sweep / 2f
                     drawContext.canvas.nativeCanvas.apply {
                         save()
-                        rotate((start + sweep / 2f + 90f), lx, ly)
+                        rotate(midDeg, center.x, center.y)
                         val paint = Paint().apply {
                             color = android.graphics.Color.argb(
                                 255,
@@ -417,17 +412,20 @@ private fun ShamsehWheel(rotationDegrees: Float) {
                                 (slice.text.blue * 255).toInt()
                             )
                             textAlign = Paint.Align.CENTER
-                            textSize = 28f
                             typeface = wheelTypeface
-                            isFakeBoldText = true
                             isAntiAlias = true
                         }
-                        drawText(slice.label, lx, ly, paint)
-                        val emojiPaint = Paint(paint).apply {
-                            textSize = 26f
-                            typeface = Typeface.DEFAULT
-                        }
-                        drawText(slice.emoji, lx, ly + 28f, emojiPaint)
+                        val maxWidth = size.minDimension * 0.36f
+                        paint.textSize = 11.dp.toPx()
+                        val fitted = maxWidth / paint.measureText(slice.label).coerceAtLeast(1f)
+                        paint.textSize = (paint.textSize * fitted).coerceIn(8.dp.toPx(), 11.dp.toPx())
+                        val textR = size.minDimension * 0.33f
+                        drawText(
+                            slice.label,
+                            center.x + textR,
+                            center.y + paint.textSize * 0.35f,
+                            paint
+                        )
                         restore()
                     }
                 }
