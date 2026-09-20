@@ -29,8 +29,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
@@ -54,11 +56,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -103,7 +107,9 @@ import com.mostafa.majiddelbandam.ui.theme.GoldLeaf
 import com.mostafa.majiddelbandam.ui.theme.Howz
 import com.mostafa.majiddelbandam.ui.theme.Parchment
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 private val OnSurface = Color(0xFF2C1701)
 private val BannerFill = Color(0xFFF5EBD7)
@@ -552,58 +558,99 @@ private fun LevelTrail(
     onCompleted: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val older = listOfNotNull(
-        (currentId - 2).takeIf { it >= 1 },
-        (currentId - 1).takeIf { it >= 1 }
-    )
-    val newer = listOfNotNull(
-        (currentId + 1).takeIf { it <= 900 },
-        (currentId + 2).takeIf { it <= 900 }
-    )
+    val segments = (MAX_LEVEL + LEVELS_PER_SEGMENT - 1) / LEVELS_PER_SEGMENT
     BoxWithConstraints(modifier.padding(horizontal = 12.dp)) {
-        Canvas(Modifier.fillMaxSize()) {
-            val sx = size.width / 360f
-            val sy = size.height / 480f
-            val path = Path().apply {
-                moveTo(90 * sx, 390 * sy)
-                cubicTo(140 * sx, 370 * sy, 240 * sx, 370 * sy, 260 * sx, 300 * sy)
-                cubicTo(275 * sx, 240 * sy, 160 * sx, 220 * sy, 180 * sx, 150 * sy)
-                cubicTo(190 * sx, 110 * sy, 120 * sx, 80 * sy, 105 * sx, 40 * sy)
+        val segmentH = maxHeight
+        val contentH = segmentH * segments
+        val scroll = rememberScrollState()
+        val density = LocalDensity.current
+        val segmentPx = with(density) { segmentH.toPx() }
+
+        LaunchedEffect(currentId, segmentH) {
+            snapshotFlow { scroll.maxValue }.first { it > 0 || segments <= 1 }
+            val seg = ((currentId - 1) / LEVELS_PER_SEGMENT).coerceIn(0, segments - 1)
+            val y = ((segments - 1 - seg) * segmentPx).roundToInt()
+            scroll.scrollTo(y.coerceIn(0, scroll.maxValue))
+        }
+
+        val fromTop = if (segmentPx <= 0f) 0 else (scroll.value / segmentPx).toInt()
+        val firstSeg = (segments - 1 - (fromTop + 1)).coerceAtLeast(0)
+        val lastSeg = (segments - 1 - (fromTop - 1)).coerceAtMost(segments - 1)
+
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scroll)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(contentH)
+            ) {
+                (firstSeg..lastSeg).forEach { seg ->
+                    val yTop = segmentH * (segments - 1 - seg)
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(segmentH)
+                            .offset(y = yTop)
+                    ) {
+                        TrailSegmentPath(connectUp = seg < segments - 1)
+                        TrailAnchors.forEachIndexed { slot, (xFrac, yFrac) ->
+                            val id = seg * LEVELS_PER_SEGMENT + slot + 1
+                            if (id in 1..MAX_LEVEL) {
+                                Anchored(xFrac, yFrac) {
+                                    when {
+                                        id in progress.starsByLevel -> CompletedNode(
+                                            id = id,
+                                            stars = progress.starsByLevel[id] ?: 3,
+                                            onClick = { onCompleted(id) }
+                                        )
+                                        id == currentId -> CurrentNode(
+                                            id = id,
+                                            landmark = landmark,
+                                            onClick = onCurrent
+                                        )
+                                        else -> LockedNode(id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            drawPath(
-                path,
-                Parchment.copy(alpha = 0.6f),
-                style = Stroke(width = 8.dp.toPx(), cap = StrokeCap.Round)
+        }
+    }
+}
+
+@Composable
+private fun TrailSegmentPath(connectUp: Boolean) {
+    Canvas(Modifier.fillMaxSize()) {
+        val sx = size.width / 360f
+        val sy = size.height / 480f
+        val path = Path().apply {
+            moveTo(90 * sx, 390 * sy)
+            cubicTo(140 * sx, 370 * sy, 240 * sx, 370 * sy, 260 * sx, 300 * sy)
+            cubicTo(275 * sx, 240 * sy, 160 * sx, 220 * sy, 180 * sx, 150 * sy)
+            cubicTo(190 * sx, 110 * sy, 120 * sx, 80 * sy, 105 * sx, 40 * sy)
+            if (connectUp) {
+                cubicTo(95 * sx, -20 * sy, 80 * sx, -80 * sy, 90 * sx, -90 * sy)
+            }
+        }
+        drawPath(
+            path,
+            Parchment.copy(alpha = 0.6f),
+            style = Stroke(width = 8.dp.toPx(), cap = StrokeCap.Round)
+        )
+        drawPath(
+            path,
+            AshrafiDeep,
+            style = Stroke(
+                width = 4.dp.toPx(),
+                cap = StrokeCap.Round,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 16f))
             )
-            drawPath(
-                path,
-                AshrafiDeep,
-                style = Stroke(
-                    width = 4.dp.toPx(),
-                    cap = StrokeCap.Round,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(12f, 16f))
-                )
-            )
-        }
-        older.getOrNull(0)?.let { id ->
-            Anchored(0.18f, 0.88f) {
-                CompletedNode(id, progress.starsByLevel[id] ?: 3) { onCompleted(id) }
-            }
-        }
-        older.getOrNull(1)?.let { id ->
-            Anchored(0.82f, 0.70f) {
-                CompletedNode(id, progress.starsByLevel[id] ?: 3) { onCompleted(id) }
-            }
-        }
-        Anchored(0.50f, 0.42f) {
-            CurrentNode(currentId, landmark, onCurrent)
-        }
-        newer.getOrNull(0)?.let { id ->
-            Anchored(0.76f, 0.20f) { LockedNode(id) }
-        }
-        newer.getOrNull(1)?.let { id ->
-            Anchored(0.24f, 0.06f) { LockedNode(id) }
-        }
+        )
     }
 }
 
@@ -623,10 +670,46 @@ private fun Anchored(xFrac: Float, yFrac: Float, content: @Composable () -> Unit
     }
 }
 
+private fun cubicPoint(p: FloatArray, t: Float): Pair<Float, Float> {
+    val u = 1f - t
+    val uu = u * u
+    val tt = t * t
+    val x = uu * u * p[0] + 3f * uu * t * p[2] + 3f * u * tt * p[4] + tt * t * p[6]
+    val y = uu * u * p[1] + 3f * uu * t * p[3] + 3f * u * tt * p[5] + tt * t * p[7]
+    return x to y
+}
+
+private fun pointOnTrail(t: Float): Pair<Float, Float> {
+    val scaled = t.coerceIn(0f, 1f) * TrailCubes.size
+    val index = scaled.toInt().coerceAtMost(TrailCubes.lastIndex)
+    val local = (scaled - index).coerceIn(0f, 1f)
+    val (x, y) = cubicPoint(TrailCubes[index], local)
+    return (x / 360f) to (y / 480f)
+}
+
+private val TrailCubes = arrayOf(
+    floatArrayOf(90f, 390f, 140f, 370f, 240f, 370f, 260f, 300f),
+    floatArrayOf(260f, 300f, 275f, 240f, 160f, 220f, 180f, 150f),
+    floatArrayOf(180f, 150f, 190f, 110f, 120f, 80f, 105f, 40f)
+)
+
+private val TrailAnchors = listOf(0.08f, 0.36f, 0.64f, 0.90f).map { pointOnTrail(it) }
+
+private const val LEVELS_PER_SEGMENT = 4
+private const val MAX_LEVEL = 900
+
 @Composable
 private fun CompletedNode(id: Int, stars: Int, onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(horizontalArrangement = Arrangement.spacedBy((-2).dp)) {
+    Box(
+        modifier = Modifier.size(56.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-14).dp),
+            horizontalArrangement = Arrangement.spacedBy((-2).dp)
+        ) {
             repeat(3) { i ->
                 Icon(
                     Icons.Filled.Star,
@@ -643,15 +726,42 @@ private fun CompletedNode(id: Int, stars: Int, onClick: () -> Unit) {
             modifier = Modifier.size(56.dp),
             brush = Brush.verticalGradient(listOf(Color(0xFFFBBF24), Color(0xFFD97706)))
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(stringResource(R.string.level_word), color = Color(0xFF78350F), fontSize = 9.sp, fontWeight = FontWeight.SemiBold)
-                Text(PersianLetters.toPersianDigits(id), color = Color.White, fontWeight = FontWeight.Black, fontSize = 16.sp)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    stringResource(R.string.level_word),
+                    color = Color(0xFF78350F),
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 9.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        PersianLetters.toPersianDigits(id),
+                        color = Color.White,
+                        fontWeight = FontWeight.Black,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 16.sp
+                    )
+                }
             }
         }
-        StatusPill(
-            if (stars >= 3) stringResource(R.string.stars_count, PersianLetters.toPersianDigits(stars))
-            else stringResource(R.string.completed_label)
-        )
+        Box(Modifier.align(Alignment.BottomCenter).offset(y = 18.dp)) {
+            StatusPill(
+                if (stars >= 3) stringResource(R.string.stars_count, PersianLetters.toPersianDigits(stars))
+                else stringResource(R.string.completed_label)
+            )
+        }
     }
 }
 
@@ -726,7 +836,10 @@ private fun CurrentNode(id: Int, landmark: String, onClick: () -> Unit) {
 
 @Composable
 private fun LockedNode(id: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Box(
+        modifier = Modifier.size(48.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Box(
             Modifier
                 .size(48.dp)
@@ -740,7 +853,9 @@ private fun LockedNode(id: Int) {
                 Text(PersianLetters.toPersianDigits(id), color = Color(0xFF57534E), fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
         }
-        StatusPill(stringResource(R.string.locked))
+        Box(Modifier.align(Alignment.BottomCenter).offset(y = 16.dp)) {
+            StatusPill(stringResource(R.string.locked))
+        }
     }
 }
 
