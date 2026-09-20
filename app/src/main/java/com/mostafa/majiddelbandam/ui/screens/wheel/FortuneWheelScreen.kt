@@ -78,6 +78,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.res.ResourcesCompat
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.data.repository.GameRepository
 import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.data.repository.WheelPrize
@@ -305,7 +306,7 @@ private fun WheelHeader(ashrafi: Int, onBack: () -> Unit) {
                 .clip(CircleShape)
                 .background(Color(0xFFFFEADA).copy(alpha = 0.6f))
                 .border(1.dp, Color(0xFFBDC9C6).copy(alpha = 0.4f), CircleShape)
-                .clickable(onClick = onBack),
+                .clickable(onClick = LocalGameAudio.current.wrap(onBack)),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowForward, stringResource(R.string.back), tint = PrimaryDark)
@@ -479,7 +480,7 @@ private fun SpinButton(spinning: Boolean, claimed: Boolean, onClick: () -> Unit)
             .padding(bottom = if (pressed && enabled) 1.dp else 4.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(fill)
-            .clickable(enabled = enabled, interactionSource = source, indication = null, onClick = onClick)
+            .clickable(enabled = enabled, interactionSource = source, indication = null, onClick = LocalGameAudio.current.wrap(onClick))
             .padding(vertical = 14.dp, horizontal = 16.dp)
     ) {
         Row(

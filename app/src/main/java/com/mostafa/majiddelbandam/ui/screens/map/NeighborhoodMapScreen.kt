@@ -87,6 +87,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.data.repository.GameRepository
 import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
@@ -126,6 +127,7 @@ fun NeighborhoodMapScreen(
     val today = PersianLetters.localEpochDay()
     val wheelFree = progress.lastWheelEpochDay != today
     val scope = rememberCoroutineScope()
+    val audio = LocalGameAudio.current
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -166,7 +168,9 @@ fun NeighborhoodMapScreen(
                 onWheel = onWheel,
                 onSettings = { showHelp = true },
                 onSound = {
-                    scope.launch { repository.setSoundEnabled(!progress.soundEnabled) }
+                    val next = !progress.soundEnabled
+                    audio.setEnabled(next)
+                    scope.launch { repository.setSoundEnabled(next) }
                 }
             )
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -362,7 +366,7 @@ private fun AshrafiCapsule(amount: Int, onAdd: () -> Unit) {
                 .size(22.dp)
                 .clip(CircleShape)
                 .background(Ashrafi)
-                .clickable(onClick = onAdd),
+                .clickable(onClick = LocalGameAudio.current.wrap(onAdd)),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Filled.Add, stringResource(R.string.add_coins), tint = Color.White, modifier = Modifier.size(14.dp))
@@ -412,7 +416,7 @@ private fun RoundIcon(icon: ImageVector, label: String, onClick: () -> Unit) {
             .clip(CircleShape)
             .background(Parchment.copy(alpha = 0.95f))
             .border(1.dp, Adobe.copy(alpha = 0.3f), CircleShape)
-            .clickable(onClick = onClick),
+            .clickable(onClick = LocalGameAudio.current.wrap(onClick)),
         contentAlignment = Alignment.Center
     ) {
         Icon(icon, label, tint = OnSurface, modifier = Modifier.size(18.dp))
@@ -433,7 +437,7 @@ private fun QuestChip(
             .clip(RoundedCornerShape(12.dp))
             .background(BannerFill.copy(alpha = 0.95f))
             .border(1.dp, AshrafiDeep.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
+            .clickable(onClick = LocalGameAudio.current.wrap(onClick))
             .padding(horizontal = 6.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -601,7 +605,7 @@ private fun CurrentNode(id: Int, landmark: String, onClick: () -> Unit) {
                 .clip(CircleShape)
                 .background(Brush.verticalGradient(listOf(Howz, Turquoise, TealShelf)))
                 .border(4.dp, GoldLeaf, CircleShape)
-                .clickable(onClick = onClick),
+                .clickable(onClick = LocalGameAudio.current.wrap(onClick)),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -772,7 +776,7 @@ private fun LevelStartDialog(
                         .size(32.dp)
                         .clip(CircleShape)
                         .background(LockClay)
-                        .clickable(onClick = onDismiss),
+                        .clickable(onClick = LocalGameAudio.current.wrap(onDismiss)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(Icons.Filled.Close, stringResource(R.string.close), tint = Color(0xFF78350F), modifier = Modifier.size(16.dp))
@@ -863,7 +867,7 @@ private fun ShelfButton(
             .padding(bottom = if (pressed) 1.dp else 4.dp)
             .clip(shape)
             .background(brush)
-            .clickable(interactionSource = source, indication = null, onClick = onClick),
+            .clickable(interactionSource = source, indication = null, onClick = LocalGameAudio.current.wrap(onClick)),
         contentAlignment = Alignment.Center
     ) { content() }
 }

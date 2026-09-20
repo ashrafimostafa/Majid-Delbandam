@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,6 +65,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.di.LocalAppContainer
 import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
@@ -102,6 +104,24 @@ fun GameScreen(
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
+
+    val audio = LocalGameAudio.current
+    var lastCommitted by remember { mutableIntStateOf(0) }
+    LaunchedEffect(state.victory) {
+        if (state.victory != null) audio.win()
+    }
+    LaunchedEffect(state.message) {
+        when (state.message) {
+            "empty", "same", "used", "length", "dict", "one" -> audio.wrong()
+            else -> Unit
+        }
+    }
+    LaunchedEffect(state.committed.size) {
+        if (state.victory == null && state.committed.size > lastCommitted && state.committed.size > 1) {
+            audio.correct()
+        }
+        lastCommitted = state.committed.size
+    }
 
     val victory = state.victory
     if (victory != null && puzzle != null) {
@@ -313,7 +333,7 @@ private fun PlayHeader(
                 .clip(RoundedCornerShape(12.dp))
                 .background(Color(0xFFFFFBEB))
                 .border(1.dp, Color(0xFFFDE68A), RoundedCornerShape(12.dp))
-                .clickable(onClick = onBack),
+                .clickable(onClick = LocalGameAudio.current.wrap(onBack)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -368,7 +388,7 @@ private fun PlayHeader(
                 modifier = Modifier
                     .size(32.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable(onClick = onSettings),
+                    .clickable(onClick = LocalGameAudio.current.wrap(onSettings)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -435,7 +455,7 @@ private fun PowerChip(
             .clip(RoundedCornerShape(12.dp))
             .background(Glass)
             .border(1.dp, border, RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
+            .clickable(onClick = LocalGameAudio.current.wrap(onClick))
             .padding(horizontal = 6.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)

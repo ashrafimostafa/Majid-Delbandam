@@ -62,6 +62,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Victory
 import com.mostafa.majiddelbandam.ui.theme.Adobe
@@ -517,7 +518,7 @@ private fun PressButton(
             .clip(RoundedCornerShape(12.dp))
             .background(container)
             .border(1.dp, AmberLine.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
-            .clickable(interactionSource = interaction, indication = null, onClick = onClick)
+            .clickable(interactionSource = interaction, indication = null, onClick = LocalGameAudio.current.wrap(onClick))
             .padding(vertical = 12.dp, horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)

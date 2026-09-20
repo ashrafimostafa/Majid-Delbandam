@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.di.LocalAppContainer
 import com.mostafa.majiddelbandam.ui.navigation.MajidNavGraph
 import com.mostafa.majiddelbandam.ui.theme.MajidDelbandamTheme
@@ -30,7 +31,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val app = application as MajidApp
         setContent {
-            CompositionLocalProvider(LocalAppContainer provides app.container) {
+            CompositionLocalProvider(
+                LocalAppContainer provides app.container,
+                LocalGameAudio provides app.container.audio
+            ) {
                 MajidDelbandamTheme {
                     Surface(modifier = Modifier.fillMaxSize()) {
                         MajidNavGraph()
@@ -38,5 +42,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as MajidApp).container.audio.enterForeground()
+    }
+
+    override fun onPause() {
+        (application as MajidApp).container.audio.enterBackground()
+        super.onPause()
     }
 }

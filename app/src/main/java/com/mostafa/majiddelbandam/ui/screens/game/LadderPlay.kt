@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.domain.Puzzle
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Clay
@@ -187,7 +188,7 @@ private fun InputLine(
                 tint = Turquoise,
                 modifier = Modifier
                     .size(22.dp)
-                    .clickable(onClick = onUndo)
+                    .clickable(onClick = LocalGameAudio.current.wrap(onUndo))
             )
         }
     }

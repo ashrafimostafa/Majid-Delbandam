@@ -66,6 +66,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.data.repository.GameRepository
 import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.domain.PersianLetters
@@ -267,7 +268,7 @@ private fun ShopHeader(ashrafi: Int, onClose: () -> Unit) {
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(SurfaceHigh.copy(alpha = 0.7f))
-                .clickable(onClick = onClose),
+                .clickable(onClick = LocalGameAudio.current.wrap(onClose)),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Filled.Close, stringResource(R.string.close), tint = OnVariant, modifier = Modifier.size(18.dp))
@@ -479,7 +480,7 @@ private fun AssistRow(offer: AssistOffer, onBuy: () -> Unit) {
                 .clip(RoundedCornerShape(8.dp))
                 .background(SurfaceHigh)
                 .border(1.dp, AshrafiDeep.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
-                .clickable(onClick = onBuy)
+                .clickable(onClick = LocalGameAudio.current.wrap(onBuy))
                 .padding(horizontal = 10.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -549,7 +550,7 @@ private fun ShelfPay(
             .padding(bottom = if (pressed) 1.dp else 3.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(fill)
-            .clickable(interactionSource = source, indication = null, onClick = onClick)
+            .clickable(interactionSource = source, indication = null, onClick = LocalGameAudio.current.wrap(onClick))
             .padding(vertical = 8.dp),
         contentAlignment = Alignment.Center
     ) {

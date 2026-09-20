@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mostafa.majiddelbandam.R
+import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.ui.theme.Parchment
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
@@ -60,6 +61,7 @@ fun PersianKeyboard(
     confirmLabel: String? = null,
     onHelp: (() -> Unit)? = null
 ) {
+    val audio = LocalGameAudio.current
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -86,7 +88,10 @@ fun PersianKeyboard(
                             enabled = ch !in dimmedKeys,
                             highlighted = ch == highlighted,
                             modifier = Modifier.weight(1f),
-                            onClick = { onLetter(ch) }
+                            onClick = {
+                                audio.click(soft = true)
+                                onLetter(ch)
+                            }
                         )
                     }
                     if (pad > 0) Spacer(Modifier.weight(pad / 2f))
@@ -99,7 +104,10 @@ fun PersianKeyboard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ActionKey(
-                onClick = onBackspace,
+                onClick = {
+                    audio.click(soft = true)
+                    onBackspace()
+                },
                 modifier = Modifier.size(width = 48.dp, height = 36.dp)
             ) {
                 Icon(
@@ -117,7 +125,10 @@ fun PersianKeyboard(
                     .height(36.dp)
             )
             ActionKey(
-                onClick = { onHelp?.invoke() },
+                onClick = {
+                    audio.click()
+                    onHelp?.invoke()
+                },
                 modifier = Modifier.size(width = 48.dp, height = 36.dp)
             ) {
                 Icon(
