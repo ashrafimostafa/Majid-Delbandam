@@ -217,16 +217,6 @@ fun NeighborhoodMapScreen(
 @Composable
 private fun CourtyardAmbience() {
     val motion = rememberInfiniteTransition(label = "ambience")
-    val ripple by motion.animateFloat(
-        0.6f, 2.4f,
-        infiniteRepeatable(tween(3200, easing = FastOutSlowInEasing), RepeatMode.Restart),
-        label = "ripple"
-    )
-    val ripple2 by motion.animateFloat(
-        0.6f, 2.4f,
-        infiniteRepeatable(tween(3200, 1600, FastOutSlowInEasing), RepeatMode.Restart),
-        label = "ripple2"
-    )
     val fly1x by motion.animateFloat(
         0f, 18f,
         infiniteRepeatable(tween(8000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
@@ -247,18 +237,8 @@ private fun CourtyardAmbience() {
         infiniteRepeatable(tween(10000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "b2y"
     )
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize()) {
         val density = LocalDensity.current
-        Box(
-            Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = maxHeight * 0.28f)
-                .size(width = 192.dp, height = 112.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            RippleRing(ripple)
-            RippleRing(ripple2, Color(0xFF9CF2E8).copy(alpha = 0.15f))
-        }
         Text(
             "🦋",
             modifier = Modifier
@@ -276,16 +256,6 @@ private fun CourtyardAmbience() {
             fontSize = 14.sp
         )
     }
-}
-
-@Composable
-private fun RippleRing(scale: Float, color: Color = Color(0xFF9CF2E8).copy(alpha = 0.22f)) {
-    Box(
-        Modifier
-            .size(width = (96 * scale).dp, height = (48 * scale).dp)
-            .border(1.dp, color.copy(alpha = (1.4f - scale).coerceIn(0.05f, 0.8f)), CircleShape)
-            .background(color, CircleShape)
-    )
 }
 
 @Composable
