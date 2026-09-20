@@ -28,7 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Inventory2
@@ -271,7 +271,12 @@ private fun ShopHeader(ashrafi: Int, onClose: () -> Unit) {
                 .clickable(onClick = LocalGameAudio.current.wrap(onClose)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Close, stringResource(R.string.close), tint = OnVariant, modifier = Modifier.size(18.dp))
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                tint = OnVariant,
+                modifier = Modifier.size(18.dp)
+            )
         }
         Text(
             stringResource(R.string.shop_title),
