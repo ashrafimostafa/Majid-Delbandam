@@ -53,8 +53,8 @@ class GameViewModel(
             _state.value = GameUiState(
                 puzzle = puzzle,
                 committed = listOf(puzzle.startWord),
-                draft = puzzle.startWord,
-                selectedIndex = firstDiff(puzzle.startWord, puzzle.endWord),
+                draft = "",
+                selectedIndex = 0,
                 quote = MajidQuotes.playing(puzzle.id)
             )
         }
@@ -78,66 +78,34 @@ class GameViewModel(
         val current = _state.value
         if (current.victory != null || current.committed.isEmpty()) return
         if (letter in current.dimmedKeys) return
+        val limit = current.puzzle?.startWord?.length ?: return
+        if (current.draft.length >= limit) return
         ensureTimer()
-        val last = current.committed.last()
-        val i = current.selectedIndex.coerceIn(0, last.lastIndex)
-        val draft = last.replaceRange(i, i + 1, letter.toString())
-        if (draft == last) {
-            _state.update { it.copy(draft = last, message = null) }
-            return
-        }
-        if (draft in repository.dictionary) {
-            acceptWord(draft)
-        } else {
-            _state.update {
-                it.copy(
-                    draft = draft,
-                    selectedIndex = i,
-                    message = "dict",
-                    hintIndex = null,
-                    hintLetter = null
-                )
-            }
+        _state.update {
+            it.copy(
+                draft = it.draft + letter,
+                message = null,
+                hintIndex = null,
+                hintLetter = null
+            )
         }
     }
 
     fun backspace() {
         val current = _state.value
-        if (current.victory != null || current.puzzle == null) return
-        val last = current.committed.last()
-        val draft = current.draft
-        if (draft.isEmpty() || last.length != draft.length) {
-            _state.update { it.copy(draft = last, message = null) }
-            return
-        }
-        val i = current.selectedIndex.coerceIn(0, draft.lastIndex)
-        if (draft[i] != last[i]) {
-            _state.update {
-                it.copy(draft = draft.replaceRange(i, i + 1, last[i].toString()), message = null)
-            }
-        } else {
-            val prev = (i - 1).coerceAtLeast(0)
-            _state.update {
-                it.copy(
-                    draft = draft.replaceRange(prev, prev + 1, last[prev].toString()),
-                    selectedIndex = prev,
-                    message = null
-                )
-            }
-        }
+        if (current.victory != null) return
+        if (current.draft.isEmpty()) return
+        _state.update { it.copy(draft = it.draft.dropLast(1), message = null) }
     }
 
     fun undoStep() {
         val current = _state.value
         if (current.committed.size <= 1 || current.victory != null) return
         val next = current.committed.dropLast(1)
-        val restored = next.last()
-        val end = current.puzzle?.endWord ?: restored
         _state.update {
             it.copy(
                 committed = next,
-                draft = restored,
-                selectedIndex = firstDiff(restored, end),
+                draft = "",
                 dimmedKeys = emptySet(),
                 hintIndex = null,
                 hintLetter = null,
@@ -146,15 +114,22 @@ class GameViewModel(
         }
     }
 
+    fun clearMessage() {
+        _state.update { it.copy(message = null) }
+    }
+
     fun submit() {
         val current = _state.value
         if (current.victory != null) return
         val last = current.committed.lastOrNull() ?: return
-        val draft = current.draft
+        val draft = current.draft.trim()
         when {
+            draft.isEmpty() -> _state.update { it.copy(message = "empty") }
             draft == last -> _state.update { it.copy(message = "same") }
-            PersianLetters.hamming(last, draft) != 1 -> _state.update { it.copy(message = "one") }
+            draft in current.committed -> _state.update { it.copy(message = "used") }
+            draft.length != last.length -> _state.update { it.copy(message = "length") }
             draft !in repository.dictionary -> _state.update { it.copy(message = "dict") }
+            PersianLetters.hamming(last, draft) != 1 -> _state.update { it.copy(message = "one") }
             else -> acceptWord(draft)
         }
     }
@@ -182,20 +157,16 @@ class GameViewModel(
             _state.update {
                 it.copy(
                     committed = committed,
-                    draft = word,
-                    selectedIndex = firstDiff(word, puzzle.endWord),
+                    draft = "",
                     dimmedKeys = emptySet(),
                     hintIndex = null,
                     hintLetter = null,
                     quote = MajidQuotes.playing(puzzle.id + committed.size),
-                    message = "next"
+                    message = null
                 )
             }
         }
     }
-
-    private fun firstDiff(from: String, to: String): Int =
-        from.indices.firstOrNull { it < to.length && from[it] != to[it] } ?: 0
 
     fun useScroll() {
         val current = _state.value
@@ -263,7 +234,7 @@ class GameViewModel(
                 return@launch
             }
             val next = repository.nextOnPath(puzzle, current.committed.last()) ?: return@launch
-            _state.update { it.copy(draft = next, selectedIndex = 0, usedHelp = true, message = null) }
+            _state.update { it.copy(draft = next, usedHelp = true, message = null) }
             submit()
         }
     }

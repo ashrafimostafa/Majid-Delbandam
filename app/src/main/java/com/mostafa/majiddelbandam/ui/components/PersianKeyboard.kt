@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Backspace
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -111,7 +110,7 @@ fun PersianKeyboard(
                 )
             }
             ConfirmKey(
-                label = confirmLabel ?: stringResource(R.string.confirm),
+                label = confirmLabel ?: stringResource(R.string.space_key),
                 onClick = onConfirm,
                 modifier = Modifier
                     .weight(1f)
@@ -224,12 +223,11 @@ private fun ConfirmKey(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally)
     ) {
-        Icon(Icons.Filled.Verified, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
         Text(
             text = label,
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            fontSize = 14.sp,
+            fontSize = 15.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

@@ -12,7 +12,16 @@
     <string name="back">بازگشت</string>
     <string name="settings">تنظیمات</string>
     <string name="how_to_play">چطور بازی کنیم؟</string>
-    <string name="how_to_body">یک کاشی بزن و با کیبورد فقط همان حرف را عوض کن. اگر واژهٔ تازه در فرهنگ باشد، گام بعد خودش باز می‌شود. همین‌طور تا واژهٔ پایان ادامه بده. کوتاه‌ترین مسیر ۳ ستاره می‌دهد؛ تا ۲ گام اضافه ۲ ستاره؛ بیشتر از آن ۱ ستاره.</string>
+    <string name="how_to_body">واژهٔ شروع و پایان را می‌بینی. واژهٔ بعدی را با کیبورد بنویس؛ باید معنی‌دار باشد و فقط یک حرف با واژهٔ بالایی فرق کند. سپس کلید فاصله را بزن. اگر درست باشد، واژه روی نردبان می‌نشیند. همین‌طور ادامه بده تا به واژهٔ پایان برسی.</string>
+    <string name="enter_word_hint">واژه را بنویس و فاصله بزن</string>
+    <string name="space_key">فاصله</string>
+    <string name="snack_empty">دلبندم، اول واژه‌ای بنویس، بعد فاصله را بزن.</string>
+    <string name="snack_same">این همان واژهٔ بالاست؛ باید حرفی عوض شود.</string>
+    <string name="snack_used">این واژه را پیش‌تر نوشته‌ای.</string>
+    <string name="snack_length">شمار حرف‌ها باید با واژهٔ شروع یکی باشد.</string>
+    <string name="snack_dict">این واژه در فرهنگ ما نیست، دلبندم.</string>
+    <string name="snack_one">هر بار فقط یک حرف را عوض کن تا به مقصد برسی.</string>
+    <string name="snack_coins">اشرفی‌ات کم است دلبندم.</string>
     <string name="tap_and_swap">کاشی برجسته را بزن و یک حرف عوض کن</string>
     <string name="next_opens">اگر واژه معنی‌دار باشد، گام بعد باز می‌شود</string>
     <string name="step_opened">آفرین! حالا یک حرف دیگر عوض کن</string>
