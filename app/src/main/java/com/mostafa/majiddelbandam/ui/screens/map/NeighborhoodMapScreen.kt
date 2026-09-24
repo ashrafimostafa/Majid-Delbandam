@@ -952,9 +952,9 @@ private fun LevelStartDialog(
                     Text(stringResource(R.string.hidden_words), color = Color(0xFF78350F), fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        WordStub(puzzle.startWord)
-                        WordStub(stringResource(R.string.steps_needed, PersianLetters.toPersianDigits(puzzle.steps)))
                         WordStub(puzzle.endWord, highlight = true)
+                        WordStub(stringResource(R.string.steps_needed, PersianLetters.toPersianDigits(puzzle.steps)))
+                        WordStub(puzzle.startWord)
                     }
                 }
                 ShelfButton(

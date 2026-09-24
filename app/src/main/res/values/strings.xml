@@ -34,7 +34,7 @@
     <string name="hafez_fal">فال حافظ</string>
     <string name="dehkhoda">فرهنگ دهخدا</string>
     <string name="dehkhoda_empty">همسایه‌ای در فرهنگ برای این واژه نیست.</string>
-    <string name="scroll_cost">۵۰-</string>
+    <string name="candle_recommend">پیشنهاد شمع: «%1$s»</string>
     <string name="stage_title">مرحله %1$s</string>
     <string name="ladder_title">نردبان واژه‌ها</string>
     <string name="ladder_step">گام‌های تو: %1$s • کوتاه‌ترین: %2$s</string>
@@ -94,7 +94,7 @@
     <string name="scroll_shop_body">کشف هوشمند یک حرف از جدول کلمات</string>
     <string name="scroll_pack">بسته ۵ عددی</string>
     <string name="candle_shop_title">شمع دانایی</string>
-    <string name="candle_shop_body">حذف ۳ حرف نامربوط از گردونه بازی</string>
+    <string name="candle_shop_body">واژهٔ پیشنهادی گام بعد را از جای فعلی‌ات نشان می‌دهد</string>
     <string name="candle_pack">بسته ۳ عددی</string>
     <string name="fal_shop_title">فال حافظ و گنجینه</string>
     <string name="fal_shop_body">حل کامل یک کلمه مشکل همراه با بیت شعر</string>

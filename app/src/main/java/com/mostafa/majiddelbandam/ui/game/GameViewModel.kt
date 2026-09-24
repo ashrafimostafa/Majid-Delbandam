@@ -29,6 +29,7 @@ data class GameUiState(
     val hintLetter: Char? = null,
     val dimmedKeys: Set<Char> = emptySet(),
     val message: String? = null,
+    val recommendation: String? = null,
     val victory: Victory? = null,
     val elapsedMs: Long = 0L,
     val helpers: Helpers = Helpers(0, 0, 0),
@@ -161,6 +162,7 @@ class GameViewModel(
                     dimmedKeys = emptySet(),
                     hintIndex = null,
                     hintLetter = null,
+                    recommendation = null,
                     quote = MajidQuotes.playing(puzzle.id + committed.size),
                     message = null
                 )
@@ -199,6 +201,7 @@ class GameViewModel(
 
     fun useCandle() {
         val current = _state.value
+        val puzzle = current.puzzle ?: return
         viewModelScope.launch {
             val used = if (current.helpers.candles > 0) {
                 repository.consume(HelperType.CANDLE)
@@ -210,12 +213,14 @@ class GameViewModel(
                 _state.update { it.copy(message = "coins") }
                 return@launch
             }
-            val last = current.committed.last()
-            val useful = PersianLetters.neighbors(last, repository.dictionary)
-                .flatMap { word -> word.filterIndexed { i, c -> last[i] != c }.toList() }
-                .toSet()
-            val dimmed = PersianLetters.ALPHABET.filterNot { it in useful }.toSet()
-            _state.update { it.copy(dimmedKeys = dimmed, usedHelp = true, message = null) }
+            val next = repository.nextOnPath(puzzle, current.committed.last())
+            _state.update {
+                it.copy(
+                    recommendation = next,
+                    usedHelp = true,
+                    message = if (next == null) "dict" else null
+                )
+            }
         }
     }
 

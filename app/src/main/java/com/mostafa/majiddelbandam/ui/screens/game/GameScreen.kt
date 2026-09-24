@@ -21,8 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.automirrored.filled.HelpCenter
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
@@ -77,7 +75,6 @@ import com.mostafa.majiddelbandam.ui.game.GameViewModel
 import com.mostafa.majiddelbandam.ui.game.GameViewModelFactory
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
-import com.mostafa.majiddelbandam.ui.theme.Clay
 import com.mostafa.majiddelbandam.ui.theme.Parchment
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
 
@@ -101,7 +98,6 @@ fun GameScreen(
     val puzzle = state.puzzle
     val context = LocalContext.current
     var showHelp by remember { mutableStateOf(false) }
-    var showDehkhoda by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
@@ -214,9 +210,9 @@ fun GameScreen(
                         onUndo = vm::undoStep
                     )
                     PowerUps(
-                        onScroll = vm::useScroll,
-                        onCandle = vm::useCandle,
-                        onDehkhoda = { showDehkhoda = true }
+                        candles = state.helpers.candles,
+                        recommendation = state.recommendation,
+                        onCandle = vm::useCandle
                     )
                 }
             }
@@ -268,35 +264,6 @@ fun GameScreen(
             },
             title = { Text(stringResource(R.string.how_to_play)) },
             text = { Text(stringResource(R.string.how_to_body)) }
-        )
-    }
-    if (showDehkhoda) {
-        val neighbors = vm.nearbyWords()
-        AlertDialog(
-            onDismissRequest = { showDehkhoda = false },
-            confirmButton = {
-                TextButton(onClick = { showDehkhoda = false }) {
-                    Text(stringResource(R.string.close))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showDehkhoda = false
-                    vm.useFal()
-                }) {
-                    Text(stringResource(R.string.hafez_fal))
-                }
-            },
-            title = { Text(stringResource(R.string.dehkhoda)) },
-            text = {
-                Text(
-                    if (neighbors.isEmpty()) {
-                        stringResource(R.string.dehkhoda_empty)
-                    } else {
-                        neighbors.joinToString("  •  ")
-                    }
-                )
-            }
         )
     }
 }
@@ -392,39 +359,37 @@ private fun PlayHeader(
 
 @Composable
 private fun PowerUps(
-    onScroll: () -> Unit,
-    onCandle: () -> Unit,
-    onDehkhoda: () -> Unit
+    candles: Int,
+    recommendation: String?,
+    onCandle: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        PowerChip(
-            icon = Icons.AutoMirrored.Filled.HelpCenter,
-            iconTint = Color(0xFFB45309),
-            title = stringResource(R.string.hint_scroll),
-            badge = stringResource(R.string.scroll_cost),
-            border = Color(0xFFFCD34D).copy(alpha = 0.70f),
-            onClick = onScroll,
-            modifier = Modifier.weight(1f)
-        )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         PowerChip(
             icon = Icons.Filled.Whatshot,
             iconTint = Color(0xFF0F766E),
             title = stringResource(R.string.wisdom_candle),
-            border = Color(0xFF5EEAD4).copy(alpha = 0.70f),
+            badge = if (candles > 0) {
+                PersianLetters.toPersianDigits(candles)
+            } else {
+                "${PersianLetters.toPersianDigits(GameViewModel.CANDLE_PRICE)}-"
+            },
             onClick = onCandle,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.fillMaxWidth()
         )
-        PowerChip(
-            icon = Icons.AutoMirrored.Filled.MenuBook,
-            iconTint = Clay,
-            title = stringResource(R.string.dehkhoda),
-            border = Color(0xFFD6D3D1).copy(alpha = 0.80f),
-            onClick = onDehkhoda,
-            modifier = Modifier.weight(1f)
-        )
+        if (recommendation != null) {
+            Text(
+                stringResource(R.string.candle_recommend, recommendation),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White.copy(alpha = 0.92f))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                color = OnSurface,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
     }
 }
 
@@ -433,7 +398,6 @@ private fun PowerChip(
     icon: ImageVector,
     iconTint: Color,
     title: String,
-    border: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     badge: String? = null

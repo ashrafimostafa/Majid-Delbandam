@@ -29,14 +29,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Diamond
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.Savings
 import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material.icons.outlined.HistoryEdu
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
@@ -72,6 +69,7 @@ import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
 import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.MajidPortrait
 import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
@@ -132,16 +130,8 @@ fun ShopScreen(
     )
     val assists = listOf(
         AssistOffer(
-            R.string.scroll_shop_title, R.string.scroll_shop_body, R.string.scroll_pack,
-            120, 5, HelperType.SCROLL, Icons.Outlined.HistoryEdu, Turquoise, Brass
-        ),
-        AssistOffer(
             R.string.candle_shop_title, R.string.candle_shop_body, R.string.candle_pack,
             180, 3, HelperType.CANDLE, Icons.Filled.Lightbulb, AshrafiDeep, Brass
-        ),
-        AssistOffer(
-            R.string.fal_shop_title, R.string.fal_shop_body, R.string.fal_pack,
-            260, 1, HelperType.FAL, Icons.AutoMirrored.Filled.MenuBook, Tertiary, Tertiary
         )
     )
 
@@ -299,18 +289,12 @@ private fun MirzaBanner() {
     Box(Modifier.padding(16.dp).fillMaxWidth()) {
         Text("✦", color = AshrafiDeep.copy(alpha = 0.3f), modifier = Modifier.align(Alignment.TopEnd), fontSize = 12.sp)
         Text("✦", color = AshrafiDeep.copy(alpha = 0.3f), modifier = Modifier.align(Alignment.BottomStart), fontSize = 12.sp)
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(contentAlignment = Alignment.BottomEnd) {
-                Box(
-                    Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(SurfaceHigh)
-                        .border(2.dp, Turquoise, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(Icons.Filled.Face, null, tint = Turquoise, modifier = Modifier.size(32.dp))
-                }
+                MajidPortrait(size = 88.dp)
                 Text(
                     stringResource(R.string.mirza),
                     modifier = Modifier

@@ -84,6 +84,7 @@ import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
 import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.MajidPortrait
 import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
@@ -535,24 +536,11 @@ private fun MajidKativeh(speech: String) {
             fontSize = 36.sp,
             modifier = Modifier.align(Alignment.BottomStart)
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(
-                Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(SurfaceHigh)
-                    .border(2.dp, Turquoise.copy(alpha = 0.4f), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Text("👳‍♂️", fontSize = 22.sp, modifier = Modifier.padding(bottom = 4.dp))
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .background(Tertiary)
-                        .align(Alignment.BottomCenter)
-                )
-            }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MajidPortrait(size = 88.dp)
             Column(Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(stringResource(R.string.majid_name), color = PrimaryDark, fontWeight = FontWeight.Black, fontSize = 13.sp)
