@@ -35,7 +35,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.RotateRight
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
@@ -83,7 +82,9 @@ import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.data.repository.WheelPrize
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
+import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -221,18 +222,31 @@ fun FortuneWheelScreen(
                     }
                 )
                 Spacer(Modifier.height(10.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                LiquidGlass(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp)
                 ) {
-                    Icon(Icons.Filled.HourglassTop, null, tint = AdobeBrown, modifier = Modifier.size(16.dp))
-                    Text(stringResource(R.string.next_free_turn), color = OnVariant, fontSize = 13.sp)
-                    Text(
-                        formatCountdown(remainMs),
-                        color = Tertiary,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                    ) {
+                        Icon(Icons.Filled.HourglassTop, null, tint = AdobeBrown, modifier = Modifier.size(18.dp))
+                        Text(
+                            stringResource(R.string.next_free_turn),
+                            color = OnSurface,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                        Text(
+                            formatCountdown(remainMs),
+                            color = Tertiary,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                    }
                 }
                 Spacer(Modifier.height(12.dp))
                 MajidKativeh(speech)
@@ -244,24 +258,22 @@ fun FortuneWheelScreen(
 
 @Composable
 private fun WheelBackdrop() {
-    val blurMod = if (Build.VERSION.SDK_INT >= 31) Modifier.blur(2.dp) else Modifier
+    Image(
+        painter = painterResource(R.drawable.courtyard),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
     Box(
         Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Color(0xFFDCE1FF).copy(alpha = 0.4f), SurfaceHigh.copy(alpha = 0.6f), Parchment)
+                    0f to Color(0xFF2C1701).copy(alpha = 0.35f),
+                    0.45f to Color.Transparent,
+                    1f to Color(0xFF2C1701).copy(alpha = 0.55f)
                 )
             )
-    )
-    Image(
-        painter = painterResource(R.drawable.courtyard),
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxSize()
-            .then(blurMod)
-            .graphicsLayer { alpha = 0.25f },
-        contentScale = ContentScale.Crop
     )
     Canvas(Modifier.fillMaxSize()) {
         val step = 24.dp.toPx()
@@ -291,24 +303,19 @@ private fun WheelBackdrop() {
 
 @Composable
 private fun WheelHeader(ashrafi: Int, onBack: () -> Unit) {
+    LiquidGlass(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
+    ) {
     Row(
         Modifier
             .fillMaxWidth()
-            .background(Parchment.copy(alpha = 0.80f))
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color(0xFFFFEADA).copy(alpha = 0.6f))
-                .border(1.dp, Color(0xFFBDC9C6).copy(alpha = 0.4f), CircleShape)
-                .clickable(onClick = LocalGameAudio.current.wrap(onBack)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back), tint = PrimaryDark)
-        }
+        CircleBackButton(onClick = LocalGameAudio.current.wrap(onBack))
         Text(
             stringResource(R.string.wheel_title),
             modifier = Modifier.weight(1f),
@@ -329,6 +336,7 @@ private fun WheelHeader(ashrafi: Int, onBack: () -> Unit) {
             CoinIcon(size = 16.dp)
             Text(PersianLetters.toPersianGrouped(ashrafi), fontWeight = FontWeight.Bold, color = OnSurface, fontSize = 13.sp)
         }
+    }
     }
 }
 
@@ -519,14 +527,8 @@ private fun SpinButton(spinning: Boolean, claimed: Boolean, onClick: () -> Unit)
 
 @Composable
 private fun MajidKativeh(speech: String) {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFFFEADA))
-            .border(1.dp, AdobeBrown.copy(alpha = 0.2f), RoundedCornerShape(16.dp))
-            .padding(14.dp)
-    ) {
+    LiquidGlass(Modifier.fillMaxWidth(), RoundedCornerShape(20.dp)) {
+    Box(Modifier.padding(14.dp).fillMaxWidth()) {
         Text(
             "❦",
             color = AshrafiDeep.copy(alpha = 0.15f),
@@ -567,6 +569,7 @@ private fun MajidKativeh(speech: String) {
                 Text(speech, color = OnSurface, fontSize = 13.sp, lineHeight = 20.sp)
             }
         }
+    }
     }
 }
 

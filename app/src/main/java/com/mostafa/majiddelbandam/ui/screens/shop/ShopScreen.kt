@@ -28,7 +28,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Inventory2
@@ -71,7 +70,9 @@ import com.mostafa.majiddelbandam.data.repository.GameRepository
 import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
+import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -221,14 +222,10 @@ fun ShopScreen(
 
 @Composable
 private fun ShopBackdrop() {
-    val blurMod = if (Build.VERSION.SDK_INT >= 31) Modifier.blur(1.dp) else Modifier
     Image(
         painter = painterResource(R.drawable.courtyard),
         contentDescription = null,
-        modifier = Modifier
-            .fillMaxSize()
-            .then(blurMod)
-            .graphicsLayer { alpha = 0.25f },
+        modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop
     )
     Box(
@@ -236,7 +233,9 @@ private fun ShopBackdrop() {
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(Cream.copy(alpha = 0.95f), Cream.copy(alpha = 0.80f), Banner.copy(alpha = 0.95f))
+                    0f to Color(0xFF2C1701).copy(alpha = 0.28f),
+                    0.4f to Color.Transparent,
+                    1f to Color(0xFF2C1701).copy(alpha = 0.45f)
                 )
             )
     )
@@ -256,29 +255,19 @@ private fun ShopBackdrop() {
 
 @Composable
 private fun ShopHeader(ashrafi: Int, onClose: () -> Unit) {
+    LiquidGlass(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
+    ) {
     Row(
         Modifier
             .fillMaxWidth()
-            .background(Parchment.copy(alpha = 0.90f))
-            .border(width = 0.dp, color = Color.Transparent)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            Modifier
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(SurfaceHigh.copy(alpha = 0.7f))
-                .clickable(onClick = LocalGameAudio.current.wrap(onClose)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.back),
-                tint = OnVariant,
-                modifier = Modifier.size(18.dp)
-            )
-        }
+        CircleBackButton(onClick = LocalGameAudio.current.wrap(onClose))
         Text(
             stringResource(R.string.shop_title),
             modifier = Modifier.weight(1f),
@@ -301,18 +290,13 @@ private fun ShopHeader(ashrafi: Int, onClose: () -> Unit) {
             Text(stringResource(R.string.ashrafi), color = OnVariant.copy(alpha = 0.8f), fontSize = 11.sp)
         }
     }
+    }
 }
 
 @Composable
 private fun MirzaBanner() {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(Banner)
-            .border(1.dp, AshrafiDeep.copy(alpha = 0.35f), RoundedCornerShape(12.dp))
-            .padding(16.dp)
-    ) {
+    LiquidGlass(Modifier.fillMaxWidth(), RoundedCornerShape(20.dp)) {
+    Box(Modifier.padding(16.dp).fillMaxWidth()) {
         Text("✦", color = AshrafiDeep.copy(alpha = 0.3f), modifier = Modifier.align(Alignment.TopEnd), fontSize = 12.sp)
         Text("✦", color = AshrafiDeep.copy(alpha = 0.3f), modifier = Modifier.align(Alignment.BottomStart), fontSize = 12.sp)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -346,6 +330,7 @@ private fun MirzaBanner() {
             }
         }
     }
+    }
 }
 
 @Composable
@@ -362,7 +347,7 @@ private fun SectionTitle(title: String, badge: String, badgeTint: Color, diamond
                     .rotate(45f)
                     .background(diamondColor, RoundedCornerShape(1.dp))
             )
-            Text(title, color = Color(0xFF005C55), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(title, color = Parchment, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
         Text(
             badge,
@@ -370,7 +355,7 @@ private fun SectionTitle(title: String, badge: String, badgeTint: Color, diamond
                 .clip(CircleShape)
                 .background(if (badgeTint == Tertiary) Color(0xFFFFD9DD).copy(alpha = 0.6f) else Color.Transparent)
                 .padding(horizontal = 8.dp, vertical = 2.dp),
-            color = badgeTint,
+            color = if (badgeTint == Tertiary) Color(0xFFFFD9DD) else Parchment,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold
         )
@@ -380,20 +365,8 @@ private fun SectionTitle(title: String, badge: String, badgeTint: Color, diamond
 @Composable
 private fun CoinTile(offer: CoinOffer, onBuy: () -> Unit, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(12.dp)
-    Box(
-        modifier
-            .clip(shape)
-            .background(
-                if (offer.featured) Brush.verticalGradient(listOf(Color(0xFFFFF1E7), Banner))
-                else Brush.verticalGradient(listOf(Banner, Banner))
-            )
-            .border(
-                if (offer.featured) 2.dp else 1.dp,
-                if (offer.featured) AshrafiDeep.copy(alpha = 0.5f) else AshrafiDeep.copy(alpha = 0.3f),
-                shape
-            )
-            .padding(10.dp)
-    ) {
+    LiquidGlass(modifier = modifier, shape = shape) {
+    Box(Modifier.fillMaxWidth().padding(10.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
             Spacer(Modifier.height(18.dp))
             Box(
@@ -448,16 +421,15 @@ private fun CoinTile(offer: CoinOffer, onBuy: () -> Unit, modifier: Modifier = M
             fontWeight = FontWeight.Bold
         )
     }
+    }
 }
 
 @Composable
 private fun AssistRow(offer: AssistOffer, onBuy: () -> Unit) {
+    LiquidGlass(Modifier.fillMaxWidth(), RoundedCornerShape(20.dp)) {
     Row(
         Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(Banner)
-            .border(1.dp, AshrafiDeep.copy(alpha = 0.3f), RoundedCornerShape(12.dp))
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -499,6 +471,7 @@ private fun AssistRow(offer: AssistOffer, onBuy: () -> Unit) {
             Text(PersianLetters.toPersianGrouped(offer.price), fontWeight = FontWeight.Bold, color = OnSurface, fontSize = 13.sp)
         }
     }
+    }
 }
 
 @Composable
@@ -508,9 +481,9 @@ private fun DiamondRule() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        Box(Modifier.width(80.dp).height(1.dp).background(Adobe.copy(alpha = 0.2f)))
-        Text("  ◆  ", color = Adobe.copy(alpha = 0.3f), fontSize = 12.sp)
-        Box(Modifier.width(80.dp).height(1.dp).background(Adobe.copy(alpha = 0.2f)))
+        Box(Modifier.width(80.dp).height(1.dp).background(Parchment.copy(alpha = 0.45f)))
+        Text("  ◆  ", color = Parchment.copy(alpha = 0.8f), fontSize = 12.sp)
+        Box(Modifier.width(80.dp).height(1.dp).background(Parchment.copy(alpha = 0.45f)))
     }
 }
 
@@ -533,9 +506,9 @@ private fun ShopFooter() {
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Icon(Icons.Filled.VerifiedUser, null, tint = Turquoise, modifier = Modifier.size(15.dp))
-            Text(stringResource(R.string.shop_secure), color = OnVariant, fontSize = 11.sp)
+            Text(stringResource(R.string.shop_secure), color = Parchment, fontSize = 11.sp)
         }
-        Text(stringResource(R.string.shop_copyright), color = OnVariant.copy(alpha = 0.6f), fontSize = 11.sp, textAlign = TextAlign.Center)
+        Text(stringResource(R.string.shop_copyright), color = Parchment.copy(alpha = 0.8f), fontSize = 11.sp, textAlign = TextAlign.Center)
     }
 }
 

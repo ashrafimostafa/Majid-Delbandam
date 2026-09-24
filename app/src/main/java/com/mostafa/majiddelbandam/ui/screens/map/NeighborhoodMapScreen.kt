@@ -98,6 +98,7 @@ import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
 import com.mostafa.majiddelbandam.domain.Puzzle
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -354,56 +355,10 @@ private fun GlassHeader(
     onSettings: () -> Unit,
     onSound: () -> Unit
 ) {
-    val shape = RoundedCornerShape(28.dp)
-    val frost = if (Build.VERSION.SDK_INT >= 31) Modifier.blur(10.dp) else Modifier
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 16.dp,
-                shape = shape,
-                ambientColor = Color(0x33000000),
-                spotColor = Color(0x14000000)
-            )
-            .clip(shape)
+    LiquidGlass(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
     ) {
-        Box(
-            Modifier
-                .matchParentSize()
-                .then(frost)
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.55f),
-                            Color(0xFFFFF4EA).copy(alpha = 0.28f),
-                            Color(0xFFFFE3CC).copy(alpha = 0.16f),
-                            Color.White.copy(alpha = 0.42f)
-                        )
-                    )
-                )
-        )
-        Box(
-            Modifier
-                .matchParentSize()
-                .background(
-                    Brush.verticalGradient(
-                        0f to Color.White.copy(alpha = 0.38f),
-                        0.45f to Color.Transparent,
-                        1f to Color(0xFFC4A574).copy(alpha = 0.10f)
-                    )
-                )
-                .border(
-                    1.dp,
-                    Brush.linearGradient(
-                        listOf(
-                            Color.White.copy(alpha = 0.78f),
-                            Color.White.copy(alpha = 0.18f),
-                            Color.White.copy(alpha = 0.50f)
-                        )
-                    ),
-                    shape
-                )
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()

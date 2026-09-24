@@ -65,6 +65,7 @@ import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Victory
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Clay
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
@@ -120,14 +121,15 @@ fun VictoryDialog(
             verticalArrangement = Arrangement.Center
         ) {
             Box(Modifier.fillMaxWidth()) {
+                LiquidGlass(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp)
-                        .shadow(16.dp, RoundedCornerShape(16.dp))
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(SurfaceLow)
-                        .border(1.dp, Adobe.copy(alpha = 0.30f), RoundedCornerShape(16.dp))
                         .padding(horizontal = 18.dp, vertical = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -206,6 +208,7 @@ fun VictoryDialog(
                             iconTint = Tertiary
                         )
                     }
+                }
                 }
                 Row(
                     modifier = Modifier

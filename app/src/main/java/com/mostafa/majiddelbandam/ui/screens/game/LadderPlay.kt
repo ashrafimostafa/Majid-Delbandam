@@ -32,6 +32,7 @@ import com.mostafa.majiddelbandam.domain.Puzzle
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Clay
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 
 private val OnSurface = Color(0xFF2C1701)
 private val Glass = Color(0xEBFFF8F5)
@@ -49,12 +50,13 @@ fun SimpleLadder(
 ) {
     val start = committed.firstOrNull() ?: puzzle.startWord
     val length = start.length
+    LiquidGlass(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
+    ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Glass)
-            .border(1.dp, Color(0xFFDFCBB0), RoundedCornerShape(16.dp))
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -73,13 +75,18 @@ fun SimpleLadder(
         )
         Text(
             stringResource(R.string.enter_word_hint),
-            color = Turquoise,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color.White.copy(alpha = 0.88f))
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            color = OnSurface,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
         Caption(stringResource(R.string.target_label))
         WordLine(word = puzzle.endWord, style = LineStyle.End)
+    }
     }
 }
 
@@ -89,7 +96,7 @@ private enum class LineStyle { Start, Accepted, Input, End }
 private fun Caption(text: String) {
     Text(
         text = text.trimEnd(':', '：').trim(),
-        color = Color(0xFF78716C),
+        color = OnSurface,
         fontSize = 11.sp,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.fillMaxWidth(),

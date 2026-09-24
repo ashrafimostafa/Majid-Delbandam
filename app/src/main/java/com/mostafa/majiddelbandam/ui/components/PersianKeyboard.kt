@@ -62,15 +62,15 @@ fun PersianKeyboard(
     onHelp: (() -> Unit)? = null
 ) {
     val audio = LocalGameAudio.current
+    LiquidGlass(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
+    ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .shadow(8.dp, RoundedCornerShape(16.dp))
-            .clip(RoundedCornerShape(16.dp))
-            .background(Parchment.copy(alpha = 0.92f))
-            .border(1.dp, Color(0xFFDFCBB0), RoundedCornerShape(16.dp))
             .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             val widest = PersianLetters.rows.maxOf { it.length }
@@ -108,13 +108,13 @@ fun PersianKeyboard(
                     audio.click(soft = true)
                     onBackspace()
                 },
-                modifier = Modifier.size(width = 48.dp, height = 36.dp)
+                modifier = Modifier.size(width = 56.dp, height = 48.dp)
             ) {
                 Icon(
                     Icons.AutoMirrored.Outlined.Backspace,
                     contentDescription = stringResource(R.string.backspace),
                     tint = KeyInk,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(22.dp)
                 )
             }
             ConfirmKey(
@@ -122,23 +122,24 @@ fun PersianKeyboard(
                 onClick = onConfirm,
                 modifier = Modifier
                     .weight(1f)
-                    .height(36.dp)
+                    .height(48.dp)
             )
             ActionKey(
                 onClick = {
                     audio.click()
                     onHelp?.invoke()
                 },
-                modifier = Modifier.size(width = 48.dp, height = 36.dp)
+                modifier = Modifier.size(width = 56.dp, height = 48.dp)
             ) {
                 Icon(
                     Icons.Filled.Lightbulb,
                     contentDescription = stringResource(R.string.how_to_play),
                     tint = Color(0xFF92400E),
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(22.dp)
                 )
             }
         }
+    }
     }
 }
 
@@ -164,7 +165,7 @@ private fun PersianKey(
     val shelf = if (pressed || !enabled) Color.Transparent else KeyShelf
     Box(
         modifier = modifier
-            .height(32.dp)
+            .height(46.dp)
             .offset(y = if (pressed && enabled) 1.5.dp else 0.dp)
             .shadow(if (pressed || !enabled) 0.dp else 1.5.dp, RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
@@ -188,7 +189,7 @@ private fun PersianKey(
             color = if (enabled) {
                 if (highlighted) Color(0xFF134E4A) else KeyInk
             } else Color(0xFFA8A29E),
-            fontSize = 13.sp,
+            fontSize = 18.sp,
             fontWeight = if (highlighted) FontWeight.Bold else FontWeight.SemiBold
         )
     }
@@ -238,7 +239,7 @@ private fun ConfirmKey(
             text = label,
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            fontSize = 15.sp,
+            fontSize = 16.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

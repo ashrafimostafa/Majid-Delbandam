@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.HelpCenter
 import androidx.compose.material.icons.filled.Settings
@@ -70,7 +69,9 @@ import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Puzzle
 import com.mostafa.majiddelbandam.domain.starsForSteps
+import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
+import com.mostafa.majiddelbandam.ui.components.LiquidGlass
 import com.mostafa.majiddelbandam.ui.components.PersianKeyboard
 import com.mostafa.majiddelbandam.ui.game.GameViewModel
 import com.mostafa.majiddelbandam.ui.game.GameViewModelFactory
@@ -316,33 +317,19 @@ private fun PlayHeader(
         stringResource(R.string.stage_title, PersianLetters.toPersianDigits(puzzle.id))
     }
     val stars = starsForSteps(committedSteps, puzzle.steps)
-    Row(
+    LiquidGlass(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(28.dp)
+    ) {
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
-            .shadow(8.dp, RoundedCornerShape(16.dp))
-            .clip(RoundedCornerShape(16.dp))
-            .background(Parchment.copy(alpha = 0.90f))
-            .border(1.dp, GoldBorder.copy(alpha = 0.60f), RoundedCornerShape(16.dp))
             .padding(horizontal = 10.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(36.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color(0xFFFFFBEB))
-                .border(1.dp, Color(0xFFFDE68A), RoundedCornerShape(12.dp))
-                .clickable(onClick = LocalGameAudio.current.wrap(onBack)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.back),
-                tint = OnSurface,
-                modifier = Modifier.size(20.dp)
-            )
-        }
+        CircleBackButton(onClick = LocalGameAudio.current.wrap(onBack))
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -400,6 +387,7 @@ private fun PlayHeader(
             }
         }
     }
+    }
 }
 
 @Composable
@@ -450,11 +438,13 @@ private fun PowerChip(
     modifier: Modifier = Modifier,
     badge: String? = null
 ) {
+    LiquidGlass(
+        modifier = modifier,
+        shape = RoundedCornerShape(18.dp)
+    ) {
     Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(Glass)
-            .border(1.dp, border, RoundedCornerShape(12.dp))
+        modifier = Modifier
+            .fillMaxWidth()
             .clickable(onClick = LocalGameAudio.current.wrap(onClick))
             .padding(horizontal = 6.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -480,6 +470,7 @@ private fun PowerChip(
                 )
             }
         }
+    }
     }
 }
 
