@@ -22,9 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -66,7 +64,6 @@ import com.mostafa.majiddelbandam.di.LocalAppContainer
 import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Puzzle
-import com.mostafa.majiddelbandam.domain.starsForSteps
 import com.mostafa.majiddelbandam.ui.components.CircleBackButton
 import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.components.LiquidGlass
@@ -74,7 +71,6 @@ import com.mostafa.majiddelbandam.ui.components.PersianKeyboard
 import com.mostafa.majiddelbandam.ui.game.GameViewModel
 import com.mostafa.majiddelbandam.ui.game.GameViewModelFactory
 import com.mostafa.majiddelbandam.ui.theme.Adobe
-import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.Parchment
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
 
@@ -185,7 +181,6 @@ fun GameScreen(
                 PlayHeader(
                     puzzle = puzzle,
                     ashrafi = state.ashrafi,
-                    committedSteps = (state.committed.size - 1).coerceAtLeast(0),
                     onBack = onBack,
                     onSettings = { showHelp = true }
                 )
@@ -272,7 +267,6 @@ fun GameScreen(
 private fun PlayHeader(
     puzzle: Puzzle,
     ashrafi: Int,
-    committedSteps: Int,
     onBack: () -> Unit,
     onSettings: () -> Unit
 ) {
@@ -283,7 +277,6 @@ private fun PlayHeader(
     } else {
         stringResource(R.string.stage_title, PersianLetters.toPersianDigits(puzzle.id))
     }
-    val stars = starsForSteps(committedSteps, puzzle.steps)
     LiquidGlass(
         modifier = Modifier
             .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -305,16 +298,6 @@ private fun PlayHeader(
                 Text(title, color = OnSurface, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 Text("•", color = Adobe, fontSize = 12.sp)
                 Text(landmark, color = Color(0xFF44403C), fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                repeat(3) { index ->
-                    Icon(
-                        imageVector = if (index < stars) Icons.Filled.Star else Icons.Outlined.Star,
-                        contentDescription = null,
-                        tint = if (index < stars) Ashrafi else Color(0xFFD6D3D1),
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
             }
         }
         Row(
