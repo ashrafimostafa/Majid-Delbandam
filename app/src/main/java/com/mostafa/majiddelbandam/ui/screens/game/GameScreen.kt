@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material.icons.outlined.Star
@@ -346,9 +346,9 @@ private fun PlayHeader(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Filled.Settings,
-                    contentDescription = stringResource(R.string.settings),
-                    tint = Color(0xFF57534E),
+                    Icons.Filled.Lightbulb,
+                    contentDescription = stringResource(R.string.how_to_play),
+                    tint = Color(0xFFB45309),
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -377,18 +377,21 @@ private fun PowerUps(
             modifier = Modifier.fillMaxWidth()
         )
         if (recommendation != null) {
-            Text(
-                stringResource(R.string.candle_recommend, recommendation),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White.copy(alpha = 0.92f))
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                color = OnSurface,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-            )
+            LiquidGlass(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp)
+            ) {
+                Text(
+                    stringResource(R.string.candle_recommend, recommendation),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    color = OnSurface,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+            }
         }
     }
 }

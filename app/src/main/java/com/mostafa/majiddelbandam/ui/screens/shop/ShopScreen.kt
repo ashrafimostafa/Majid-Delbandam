@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Diamond
 import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material.icons.filled.Lightbulb
@@ -430,15 +429,15 @@ private fun AssistRow(offer: AssistOffer, onBuy: () -> Unit) {
         }
         Column(Modifier.weight(1f)) {
             Text(stringResource(offer.title), color = OnSurface, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-            Text(stringResource(offer.body), color = OnVariant, fontSize = 11.sp, lineHeight = 16.sp)
+            Text(stringResource(offer.body), color = OnSurface, fontWeight = FontWeight.SemiBold, fontSize = 12.sp, lineHeight = 18.sp)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 Icon(
-                    if (offer.type == HelperType.FAL) Icons.Filled.AutoAwesome else Icons.Outlined.Inventory2,
+                    Icons.Outlined.Inventory2,
                     null,
-                    tint = offer.packTint,
+                    tint = OnSurface,
                     modifier = Modifier.size(12.dp)
                 )
-                Text(stringResource(offer.pack), color = offer.packTint, fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                Text(stringResource(offer.pack), color = OnSurface, fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
         Row(
