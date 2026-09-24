@@ -119,14 +119,14 @@ private data class WheelSlice(
 )
 
 private val slices = listOf(
-    WheelSlice(WheelPrize.Coins(50, "۵۰ اشرفی"), "۵۰ اشرفی", "●", "مبارکه دلبندم! ۵۰ اشرفی ناب به کیسه‌ات ریخته شد، خرج شیرینی نکنی همشو!", Color(0xFFD97706), Color(0xFFFEF3C7), Color.White),
+    WheelSlice(WheelPrize.Coins(50, "۵۰ قران"), "۵۰ قران", "●", "مبارکه دلبندم! ۵۰ قران ناب به کیسه‌ات ریخته شد، خرج شیرینی نکنی همشو!", Color(0xFFD97706), Color(0xFFFEF3C7), Color.White),
     WheelSlice(WheelPrize.Helper(HelperType.SCROLL, "طومار راهنما"), "طومار راهنما", "📜", "به‌به! یک طومار رموز کهن نصیبت شد؛ گره از دشوارترین کلمات می‌گشاید.", Color(0xFFF5EBD7), Color(0xFFD97706), AdobeBrown),
-    WheelSlice(WheelPrize.Coins(100, "۱۰۰ اشرفی"), "۱۰۰ اشرفی", "●", "دست مریزاد! ۱۰۰ سکه زرین اشرفی؛ بخت امروزت واقعاً مثل خورشید درخشید!", Color(0xFF0F766E), Color(0xFF9CF2E8), Color.White),
+    WheelSlice(WheelPrize.Coins(100, "۱۰۰ قران"), "۱۰۰ قران", "●", "دست مریزاد! ۱۰۰ سکه زرین قران؛ بخت امروزت واقعاً مثل خورشید درخشید!", Color(0xFF0F766E), Color(0xFF9CF2E8), Color.White),
     WheelSlice(WheelPrize.Helper(HelperType.CANDLE, "شمع دانایی"), "شمع دانایی", "🕯️", "شمع شب‌افروز دانایی تقدیم تو! تاریکی جهل رو بسوزون دلبندم.", Pomegranate, Color(0xFFFFD9DD), Color.White),
     WheelSlice(WheelPrize.Empty, "لبخند مجید", "🎭", "دلبندم فدای سرت! قسمت نبود این نوبت؛ ولی دلت شاد و لبت خندون باشه همیشه!", AdobeBrown, Color(0xFFFCD34D), Color(0xFFFDE68A)),
-    WheelSlice(WheelPrize.Coins(500, "خمره طلا!"), "خمره طلا!", "🏺", "ای والله! بار و بندیل ببند که خمره طلا رو بُردی دلبندم! ۵۰۰ اشرفی تمام!", Color(0xFFF59E0B), Color.White, Color.White),
+    WheelSlice(WheelPrize.Coins(500, "خمره طلا!"), "خمره طلا!", "🏺", "ای والله! بار و بندیل ببند که خمره طلا رو بُردی دلبندم! ۵۰۰ قران تمام!", Color(0xFFF59E0B), Color.White, Color.White),
     WheelSlice(WheelPrize.Helper(HelperType.FAL, "فال حافظ"), "فال حافظ", "📖", "یوسف گمگشته بازآید به کنعان غم مخور... بخت با تو یار است عزیز دل!", Cobalt, Color(0xFFB6C4FF), Color.White),
-    WheelSlice(WheelPrize.Coins(20, "۲۰ اشرفی"), "۲۰ اشرفی", "●", "قطره قطره جمع گردد وانگهی دریا شود! ۲۰ اشرفی نوش جانت.", Color(0xFF0F766E), Color(0xFF9CF2E8), Color.White)
+    WheelSlice(WheelPrize.Coins(20, "۲۰ قران"), "۲۰ قران", "●", "قطره قطره جمع گردد وانگهی دریا شود! ۲۰ قران نوش جانت.", Color(0xFF0F766E), Color(0xFF9CF2E8), Color.White)
 )
 
 private val WheelEasing = CubicBezierEasing(0.12f, 0.8f, 0.15f, 1f)

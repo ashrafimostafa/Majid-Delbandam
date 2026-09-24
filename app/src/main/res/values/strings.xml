@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">مجید دلبندم</string>
-    <string name="ashrafi">اشرفی</string>
+    <string name="ashrafi">قران</string>
     <string name="play">بازی کن</string>
     <string name="play_level">بازی کن (مرحله %1$s)</string>
     <string name="next_level">مرحله بعدی</string>
@@ -21,7 +21,7 @@
     <string name="snack_length">شمار حرف‌ها باید با واژهٔ شروع یکی باشد.</string>
     <string name="snack_dict">این واژه در فرهنگ ما نیست، دلبندم.</string>
     <string name="snack_one">هر بار فقط یک حرف را عوض کن تا به مقصد برسی.</string>
-    <string name="snack_coins">اشرفی‌ات کم است دلبندم.</string>
+    <string name="snack_coins">قرانت کم است دلبندم.</string>
     <string name="tap_and_swap">کاشی برجسته را بزن و یک حرف عوض کن</string>
     <string name="next_opens">اگر واژه معنی‌دار باشد، گام بعد باز می‌شود</string>
     <string name="step_opened">آفرین! حالا یک حرف دیگر عوض کن</string>
@@ -46,7 +46,7 @@
     <string name="victory_headline">بارک‌الله دلبندم!</string>
     <string name="stage_conquered">%1$s فتح شد</string>
     <string name="conquest_title">فتح %1$s</string>
-    <string name="gold_ashrafi">اشرفی زرین</string>
+    <string name="gold_ashrafi">قران زرین</string>
     <string name="qajar_reward">جایزه %1$s</string>
     <string name="special_reward">پاداش ویژه</string>
     <string name="path_steps">گام‌های مسیر</string>
@@ -73,12 +73,12 @@
     <string name="wheel_idle_speech">«دلبندم، بختت مثل آب زلال حوض فیروزه باشه؛ این طاس گردون رو بچرخون ببینیم نسیم باد صبا برات چی هدیه آورده!»</string>
     <string name="wheel_spinning_speech">«چرخید و چرخید... یا ضامن آهو! ببینیم روی کدوم شمسه قفل میشه...»</string>
     <string name="free_badge">رایگان</string>
-    <string name="coin_packs">کیسه‌ها و خمره‌های اشرفی</string>
+    <string name="coin_packs">کیسه‌ها و خمره‌های قران</string>
     <string name="helpers">بقچه‌های یاری و راهنما</string>
     <string name="instant_delivery">تحویل آنی</string>
     <string name="helper_tools_tag">ابزار گره‌گشا</string>
     <string name="shop_wisdom">حکمت روز دکان:</string>
-    <string name="shop_quote">«دلبندم، جیب پر از اشرفی باشه، گره از هر کلمه‌ای وا میشه!»</string>
+    <string name="shop_quote">«دلبندم، جیب پر از قران باشه، گره از هر کلمه‌ای وا میشه!»</string>
     <string name="shop_quote_sub">خرج کن و کلمات سخت رو مثل آب خوردن پیدا کن!</string>
     <string name="mirza">میرزا</string>
     <string name="special_discount">تخفیف ویژه</string>
@@ -101,8 +101,8 @@
     <string name="fal_pack">اکسیر ویژه مرحله</string>
     <string name="shop_secure">پرداخت امن و معتبر بانکی شتاب • ذخیره خودکار ابری</string>
     <string name="shop_copyright">بازی خاطره‌انگیز «مجید دلبندم» © تمامی حقوق محفوظ است</string>
-    <string name="coins_delivered">اشرفی‌ها به صندوقت نشست.</string>
-    <string name="not_enough">اشرفی‌ات کم است دلبندم.</string>
+    <string name="coins_delivered">قران‌ها به صندوقت نشست.</string>
+    <string name="not_enough">قرانت کم است دلبندم.</string>
     <string name="invalid_word">این واژه در فرهنگ ما نیست.</string>
     <string name="need_one_letter">فقط یک حرف را عوض کن.</string>
     <string name="same_word">باید چیزی عوض شود.</string>
@@ -125,7 +125,7 @@
     <string name="stars_count">%1$s ستاره</string>
     <string name="start_level">شروع مرحله %1$s</string>
     <string name="discover_words">کشف واژگان %1$s</string>
-    <string name="reward_plus">جایزه: %1$s+ اشرفی</string>
+    <string name="reward_plus">جایزه: %1$s+ قران</string>
     <string name="reward_short">%1$s+</string>
     <string name="proverb">«جوجه را آخر پاییز می‌شمارند!»</string>
     <string name="enter_game">ورود به بازی</string>
