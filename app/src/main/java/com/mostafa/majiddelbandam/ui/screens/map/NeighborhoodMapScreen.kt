@@ -39,7 +39,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.MusicOff
 import androidx.compose.material.icons.filled.PlayArrow
@@ -98,6 +97,7 @@ import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
 import com.mostafa.majiddelbandam.domain.Puzzle
+import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -455,20 +455,7 @@ private fun GlassCoinChip(amount: Int, onAdd: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Box(
-            Modifier
-                .size(18.dp)
-                .clip(CircleShape)
-                .background(Brush.radialGradient(listOf(Color(0xFFFBBF24), Color(0xFFD97706)))),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Filled.MonetizationOn,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(12.dp)
-            )
-        }
+        CoinIcon(size = 18.dp)
         Text(
             PersianLetters.toPersianGrouped(amount),
             color = HeaderInk,
@@ -829,7 +816,7 @@ private fun CurrentNode(id: Int, landmark: String, onClick: () -> Unit) {
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold
             )
-            Icon(Icons.Filled.MonetizationOn, null, tint = Ashrafi, modifier = Modifier.size(14.dp))
+            CoinIcon(size = 14.dp)
         }
     }
 }
@@ -934,7 +921,7 @@ private fun PlayCta(levelId: Int, landmark: String, onClick: () -> Unit) {
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
-                    Icon(Icons.Filled.MonetizationOn, null, tint = Color(0xFF451A03), modifier = Modifier.size(14.dp))
+                    CoinIcon(size = 14.dp)
                 }
             }
         }

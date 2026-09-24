@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.HelpCenter
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Whatshot
@@ -71,6 +70,7 @@ import com.mostafa.majiddelbandam.domain.Neighborhood
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Puzzle
 import com.mostafa.majiddelbandam.domain.starsForSteps
+import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.components.PersianKeyboard
 import com.mostafa.majiddelbandam.ui.game.GameViewModel
 import com.mostafa.majiddelbandam.ui.game.GameViewModelFactory
@@ -376,7 +376,7 @@ private fun PlayHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(Icons.Filled.MonetizationOn, contentDescription = null, tint = Adobe, modifier = Modifier.size(14.dp))
+                CoinIcon(size = 14.dp)
                 Text(
                     PersianLetters.toPersianGrouped(ashrafi),
                     color = Color(0xFF78350F),
@@ -463,16 +463,22 @@ private fun PowerChip(
         Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(14.dp))
         Text(title, color = OnSurface, fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
         if (badge != null) {
-            Text(
-                badge,
-                color = Color(0xFF92400E),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 9.sp,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
                     .background(Color(0xFFFEF3C7))
                     .padding(horizontal = 4.dp, vertical = 2.dp)
-            )
+            ) {
+                CoinIcon(size = 10.dp)
+                Text(
+                    badge,
+                    color = Color(0xFF92400E),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 9.sp
+                )
+            }
         }
     }
 }

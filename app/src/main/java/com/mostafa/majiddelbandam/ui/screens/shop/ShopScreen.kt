@@ -71,6 +71,7 @@ import com.mostafa.majiddelbandam.data.repository.GameRepository
 import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
+import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -295,7 +296,7 @@ private fun ShopHeader(ashrafi: Int, onClose: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Icon(Icons.Filled.MonetizationOn, null, tint = Ashrafi, modifier = Modifier.size(16.dp))
+            CoinIcon(size = 16.dp)
             Text(PersianLetters.toPersianGrouped(ashrafi), fontWeight = FontWeight.Bold, color = OnSurface, fontSize = 12.sp)
             Text(stringResource(R.string.ashrafi), color = OnVariant.copy(alpha = 0.8f), fontSize = 11.sp)
         }
@@ -403,7 +404,11 @@ private fun CoinTile(offer: CoinOffer, onBuy: () -> Unit, modifier: Modifier = M
                     .border(1.dp, Adobe.copy(alpha = 0.25f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(offer.icon, null, tint = if (offer.badgeDark) Tertiary else if (offer.featured) AshrafiDeep else Color(0xFFB45309), modifier = Modifier.size(28.dp))
+                if (offer.icon == Icons.Filled.MonetizationOn) {
+                    CoinIcon(size = 32.dp)
+                } else {
+                    Icon(offer.icon, null, tint = if (offer.badgeDark) Tertiary else if (offer.featured) AshrafiDeep else Color(0xFFB45309), modifier = Modifier.size(28.dp))
+                }
             }
             Text(stringResource(offer.title), color = OnSurface, fontWeight = FontWeight.Bold, fontSize = 13.sp, modifier = Modifier.padding(top = 8.dp))
             Row(
@@ -411,7 +416,7 @@ private fun CoinTile(offer: CoinOffer, onBuy: () -> Unit, modifier: Modifier = M
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.padding(vertical = 4.dp)
             ) {
-                Icon(Icons.Filled.MonetizationOn, null, tint = Ashrafi, modifier = Modifier.size(16.dp))
+                CoinIcon(size = 16.dp)
                 Text(PersianLetters.toPersianGrouped(offer.coins), color = Color(0xFF005C55), fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
                 Text(stringResource(R.string.ashrafi), color = OnVariant, fontSize = 11.sp)
             }
@@ -490,7 +495,7 @@ private fun AssistRow(offer: AssistOffer, onBuy: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Icon(Icons.Filled.MonetizationOn, null, tint = Ashrafi, modifier = Modifier.size(14.dp))
+            CoinIcon(size = 14.dp)
             Text(PersianLetters.toPersianGrouped(offer.price), fontWeight = FontWeight.Bold, color = OnSurface, fontSize = 13.sp)
         }
     }

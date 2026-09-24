@@ -31,7 +31,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material.icons.filled.Toll
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
@@ -65,6 +64,7 @@ import com.mostafa.majiddelbandam.R
 import com.mostafa.majiddelbandam.audio.LocalGameAudio
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.Victory
+import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Clay
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
@@ -409,7 +409,7 @@ private fun RewardTray(victory: Victory, landmark: String) {
                 .border(1.dp, AmberLine.copy(alpha = 0.50f), RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Toll, contentDescription = null, tint = Adobe, modifier = Modifier.size(24.dp))
+            CoinIcon(size = 28.dp)
         }
         Column(Modifier.weight(1f).padding(horizontal = 10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {

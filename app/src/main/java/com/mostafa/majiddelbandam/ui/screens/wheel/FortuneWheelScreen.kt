@@ -40,7 +40,6 @@ import androidx.compose.material.icons.automirrored.filled.RotateRight
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.HourglassTop
-import androidx.compose.material.icons.filled.MonetizationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -84,6 +83,7 @@ import com.mostafa.majiddelbandam.data.repository.HelperType
 import com.mostafa.majiddelbandam.data.repository.WheelPrize
 import com.mostafa.majiddelbandam.domain.PersianLetters
 import com.mostafa.majiddelbandam.domain.PlayerProgress
+import com.mostafa.majiddelbandam.ui.components.CoinIcon
 import com.mostafa.majiddelbandam.ui.theme.Adobe
 import com.mostafa.majiddelbandam.ui.theme.Ashrafi
 import com.mostafa.majiddelbandam.ui.theme.AshrafiDeep
@@ -326,7 +326,7 @@ private fun WheelHeader(ashrafi: Int, onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Icon(Icons.Filled.MonetizationOn, null, tint = AshrafiDeep, modifier = Modifier.size(16.dp))
+            CoinIcon(size = 16.dp)
             Text(PersianLetters.toPersianGrouped(ashrafi), fontWeight = FontWeight.Bold, color = OnSurface, fontSize = 13.sp)
         }
     }
