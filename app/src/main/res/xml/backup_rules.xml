@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Player progress (DataStore Preferences) -->
+    <include domain="file" path="datastore/" />
+    <!-- Copied puzzle DB if present under app databases -->
+    <include domain="database" path="." />
+</full-backup-content>

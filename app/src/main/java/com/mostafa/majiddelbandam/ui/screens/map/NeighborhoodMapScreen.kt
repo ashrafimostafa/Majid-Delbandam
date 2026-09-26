@@ -29,10 +29,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
@@ -61,7 +61,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -108,9 +107,7 @@ import com.mostafa.majiddelbandam.ui.theme.GoldLeaf
 import com.mostafa.majiddelbandam.ui.theme.Howz
 import com.mostafa.majiddelbandam.ui.theme.Parchment
 import com.mostafa.majiddelbandam.ui.theme.Turquoise
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 private val OnSurface = Color(0xFF2C1701)
 private val BannerFill = Color(0xFFF5EBD7)
@@ -502,59 +499,43 @@ private fun LevelTrail(
 ) {
     val segments = (MAX_LEVEL + LEVELS_PER_SEGMENT - 1) / LEVELS_PER_SEGMENT
     BoxWithConstraints(modifier.padding(horizontal = 12.dp)) {
-        val segmentH = maxHeight
-        val contentH = segmentH * segments
-        val scroll = rememberScrollState()
-        val density = LocalDensity.current
-        val segmentPx = with(density) { segmentH.toPx() }
-
-        LaunchedEffect(currentId, segmentH) {
-            snapshotFlow { scroll.maxValue }.first { it > 0 || segments <= 1 }
-            val seg = ((currentId - 1) / LEVELS_PER_SEGMENT).coerceIn(0, segments - 1)
-            val y = ((segments - 1 - seg) * segmentPx).roundToInt()
-            scroll.scrollTo(y.coerceIn(0, scroll.maxValue))
+        val segmentH = when {
+            maxHeight == Dp.Infinity || maxHeight == Dp.Unspecified || maxHeight.value <= 0f -> 480.dp
+            else -> maxHeight
         }
-
-        val fromTop = if (segmentPx <= 0f) 0 else (scroll.value / segmentPx).toInt()
-        val firstSeg = (segments - 1 - (fromTop + 1)).coerceAtLeast(0)
-        val lastSeg = (segments - 1 - (fromTop - 1)).coerceAtMost(segments - 1)
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(scroll)
+        val listState = rememberLazyListState()
+        LaunchedEffect(currentId, segmentH) {
+            val seg = ((currentId - 1) / LEVELS_PER_SEGMENT).coerceIn(0, segments - 1)
+            listState.scrollToItem(seg)
+        }
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            reverseLayout = true
         ) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(contentH)
-            ) {
-                (firstSeg..lastSeg).forEach { seg ->
-                    val yTop = segmentH * (segments - 1 - seg)
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(segmentH)
-                            .offset(y = yTop)
-                    ) {
-                        TrailSegmentPath(connectUp = seg < segments - 1)
-                        TrailAnchors.forEachIndexed { slot, (xFrac, yFrac) ->
-                            val id = seg * LEVELS_PER_SEGMENT + slot + 1
-                            if (id in 1..MAX_LEVEL) {
-                                Anchored(xFrac, yFrac) {
-                                    when {
-                                        id in progress.starsByLevel -> CompletedNode(
-                                            id = id,
-                                            stars = progress.starsByLevel[id] ?: 3,
-                                            onClick = { onCompleted(id) }
-                                        )
-                                        id == currentId -> CurrentNode(
-                                            id = id,
-                                            landmark = landmark,
-                                            onClick = onCurrent
-                                        )
-                                        else -> LockedNode(id)
-                                    }
+            items(segments, key = { it }) { seg ->
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(segmentH)
+                ) {
+                    TrailSegmentPath(connectUp = seg < segments - 1)
+                    TrailAnchors.forEachIndexed { slot, (xFrac, yFrac) ->
+                        val id = seg * LEVELS_PER_SEGMENT + slot + 1
+                        if (id in 1..MAX_LEVEL) {
+                            Anchored(xFrac, yFrac) {
+                                when {
+                                    id in progress.starsByLevel -> CompletedNode(
+                                        id = id,
+                                        stars = progress.starsByLevel[id] ?: 3,
+                                        onClick = { onCompleted(id) }
+                                    )
+                                    id == currentId -> CurrentNode(
+                                        id = id,
+                                        landmark = landmark,
+                                        onClick = onCurrent
+                                    )
+                                    else -> LockedNode(id)
                                 }
                             }
                         }
